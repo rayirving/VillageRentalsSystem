@@ -1,6 +1,6 @@
 package controllers;
 
-import java.sql.Connection;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -24,7 +24,7 @@ public class CustomerManager {
 		return null; 
 	}
 	
-	void addCustomer(Customer customer) {
+	public void addCustomer(Customer customer) {
 		customers.add(customer);
 	}
 	
