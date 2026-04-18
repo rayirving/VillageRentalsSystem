@@ -1,14 +1,14 @@
 package domain;
 
 public class Customer {
-	String id;
-	String firstName;
-	String surname;
+	private String id;
+	private String firstName;
+	private String surname;
 	
-	String phoneNumber;
-	String email; 
+	private String phoneNumber;
+	private String email; 
 	
-	String notes;
+	private String notes;
 	boolean isBanned = false;
 	
 	
