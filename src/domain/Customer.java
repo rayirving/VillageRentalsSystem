@@ -19,6 +19,19 @@ public class Customer {
 	}
 	
 	
+	public Customer(String id, String firstName, String surname, String phoneNumber, String email, String notes,
+			boolean isBanned) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.surname = surname;
+		this.phoneNumber = phoneNumber;
+		this.email = email;
+		this.notes = notes;
+		this.isBanned = isBanned;
+	}
+
+
 	// --- Getters & Setters ---
 
 	public String getId() {return id;}
@@ -40,5 +53,14 @@ public class Customer {
 
 	public boolean isBanned() {return isBanned;}
 	public void setBanned(boolean isBanned) {this.isBanned = isBanned;}
+
+
+	@Override
+	public String toString() {
+		return "Customer [id=" + id + ", firstName=" + firstName + ", surname=" + surname + ", phoneNumber="
+				+ phoneNumber + ", email=" + email + ", notes=" + notes + ", isBanned=" + isBanned + "]";
+	}
+	
+	
 	
 }

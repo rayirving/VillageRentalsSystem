@@ -14,7 +14,7 @@ public class CustomerManager {
 	 * get customer by id
 	 * returns null if no customer is found
 	 */
-	Customer getCustomer(String id) {
+	public Customer getCustomer(String id) {
 		for (Customer customer : customers) {
 			if (customer.getId().equals(id)) {
 				return customer;
@@ -31,7 +31,7 @@ public class CustomerManager {
 	/*
 	 * remove customer by id
 	 */
-	void removeCustomer(String id) {
+	public void removeCustomer(String id) {
 		for (int i = 0; i < customers.size();i ++) {
 			if (customers.get(i).getId().equals(id)) {
 				customers.remove(i);
@@ -45,7 +45,7 @@ public class CustomerManager {
 	/*
 	 * modify customer by id
 	 */
-	void modifyCustomer(String id) { // might need to add some error handling
+	public void modifyCustomer(String id) { // might need to add some error handling
 		Customer customer = getCustomer(id);
 		
 		//print menu
