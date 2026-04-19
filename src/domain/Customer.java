@@ -9,19 +9,13 @@ public class Customer {
 	private String email; 
 	
 	private String notes;
-	boolean isBanned = false;
+	String isBanned;
 	
 	
 	// --- Constructor ---
 	
-	public Customer(String id) {
-		this.id = id;
-	}
-	
-	
 	public Customer(String id, String firstName, String surname, String phoneNumber, String email, String notes,
-			boolean isBanned) {
-		super();
+			String isBanned) {
 		this.id = id;
 		this.firstName = firstName;
 		this.surname = surname;
@@ -49,10 +43,10 @@ public class Customer {
 	public Customer setEmail(String email) {this.email = email; return this;}
 
 	public String getNotes() {return notes;}
-	public void setNotes(String notes) {this.notes = notes;}
+	public Customer setNotes(String notes) {this.notes = notes; return this;}
 
-	public boolean isBanned() {return isBanned;}
-	public void setBanned(boolean isBanned) {this.isBanned = isBanned;}
+	public String isBanned() {return isBanned;}
+	public Customer setBanned(String isBanned) {this.isBanned = isBanned; return this;}
 
 
 	@Override
