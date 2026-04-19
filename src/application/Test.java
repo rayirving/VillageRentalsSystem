@@ -36,9 +36,9 @@ public class Test {
 		
 		System.out.println("\n-- Equipment Test --");
 		
-		im.addEquipment("1", "kitchen", "Pan", "yummy", 10.5f, 5);
-		im.addEquipment("2", "recreation", "Baseball Bat", "fdsafd", 5.0f, 3);
-		im.addEquipment("3", "Box", "Box", "Box", 5.0f, 4);
+		im.addEquipment("1", "kitchen", "Pan", "yummy", 10.5f);
+		im.addEquipment("2", "recreation", "Baseball Bat", "fdsafd", 5.0f);
+		im.addEquipment("3", "Box", "Box", "Box", 5.0f);
 		System.out.println(im.getEquipment("2"));
 		im.removeEquipment("2");
 		System.out.println(im.getEquipment("2"));

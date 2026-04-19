@@ -10,10 +10,10 @@ public class InventoryManager {
 	private ArrayList<Equipment> equipments = new ArrayList<>();
 	private HashMap<Equipment, Integer> inventory = new HashMap<>();
 	
-	public void addEquipment(String id, String category, String name, String desc, float dailyRentalCost, int stock) {
+	public void addEquipment(String id, String category, String name, String desc, float dailyRentalCost) {
 		Equipment equipment = new Equipment(id, name, desc, dailyRentalCost, category);
 		equipments.add(equipment);
-		inventory.put(equipment, stock);
+		inventory.put(equipment, 0);
 	}
 	
 	public void removeEquipment(String id) {
