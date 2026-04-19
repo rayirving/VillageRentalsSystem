@@ -43,6 +43,8 @@ public class Test {
 		im.removeEquipment("2");
 		System.out.println(im.getEquipment("2"));
 		System.out.println(im.getStock("3"));
+		im.addStock("3", 2);
+		System.out.println(im.getStock("3"));
 		
 		
 		

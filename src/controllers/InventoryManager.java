@@ -20,7 +20,7 @@ public class InventoryManager {
 		for (int i = 0; i < equipments.size(); i++) {
 			if (equipments.get(i).getId().equals(id)) {
 				equipments.remove(i);
-				inventory.remove(i); // not sure if this is removed correctly
+				inventory.remove(getEquipment(id));
 				System.out.println("Equipment removed.");
 				return;
 			}
@@ -78,12 +78,18 @@ public class InventoryManager {
 		return false;
 	}
 	
-	public void addStock(String id) {
-		
+	public void addStock(String id, int amount) {
+		Equipment equipment = getEquipment(id);
+		int current_stock = inventory.get(equipment);
+		int new_stock = current_stock + amount;
+		inventory.put(equipment, new_stock);
 	}
 	
-	public void removeStock(String id) {
-		
+	public void removeStock(String id, int amount) {
+		Equipment equipment = getEquipment(id);
+		int current_stock = inventory.get(equipment);
+		int new_stock = current_stock - amount;
+		inventory.put(equipment, new_stock);
 	}
 	
 	public int getStock(String id) {
@@ -91,7 +97,24 @@ public class InventoryManager {
 		return inventory.get(equipment);
 	}
 	
+	// returns true if stock is over 0, false if null or 0
 	public boolean isValidStock(String name) {
+		Equipment equipment;
+		int stock;
+		// find equipment by name first
+		for (int i = 0; i < equipments.size(); i++) {
+			if (equipments.get(i).getName().equals(name)) {
+				//get stock and determine if it is valid
+				equipment = equipments.get(i);
+				stock = inventory.get(equipment);
+				if (stock > 0) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+		}
 		return false;
 	}
 	
