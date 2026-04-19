@@ -23,7 +23,7 @@ public class DatabaseManager {
 			// Create CATEGORY table
 			statment.execute("""
 				CREATE TABLE IF NOT EXISTS CATEGORY (
-				category_id		VARCHAR(32) PRIMARY KEY,
+				category_id		VARCHAR(36) PRIMARY KEY,
 				name			VARCHAR(50) UNIQUE NOT NULL
 				);
 			""");
@@ -31,11 +31,11 @@ public class DatabaseManager {
 			// Create EQUIPMENT table
 			statment.execute("""
 				CREATE TABLE IF NOT EXISTS EQUIPMENT (
-				equipment_id	VARCHAR(32) 	PRIMARY KEY,
+				equipment_id	VARCHAR(36) 	PRIMARY KEY,
 				name			VARCHAR(50)		UNIQUE NOT NULL,
 				description		VARCHAR(500),
 				dailyRentalCost	DECIMAL(10,2)	NOT NULL,
-				category_id		VARCHAR(32)		NOT NULL,
+				category_id		VARCHAR(36)		NOT NULL,
 				FOREIGN KEY (category_id) REFERENCES CATEGORY(category_id)
 				);
 			""");
@@ -43,7 +43,7 @@ public class DatabaseManager {
 			// Create CUSTOMER table
 			statment.execute("""
 				CREATE TABLE IF NOT EXISTS CUSTOMER (
-				customer_id		VARCHAR(32) PRIMARY KEY,
+				customer_id		VARCHAR(36) PRIMARY KEY,
 				firstname		VARCHAR(32) NOT NULL,
 				surname			VARCHAR(32) NOT NULL,
 				phone			VARCHAR(10),
@@ -57,13 +57,13 @@ public class DatabaseManager {
 			// Create RENTAL table
 			statment.execute("""
 					CREATE TABLE IF NOT EXISTS RENTAL (
-					rental_id		VARCHAR(32) PRIMARY KEY,
+					rental_id		VARCHAR(36) PRIMARY KEY,
 					notes			VARCHAR(50),
 					status			VARCHAR(32) NOT NULL,
 					rentalDate		DATE NOT NULL,
 					returnDate 		DATE NOT NULL,
-					customer_id		VARCHAR(32) NOT NULL,
-					equipment_id	VARCHAR(32) NOT NULL,
+					customer_id		VARCHAR(36) NOT NULL,
+					equipment_id	VARCHAR(36) NOT NULL,
 					FOREIGN KEY (customer_id) 	REFERENCES CUSTOMER(customer_id),
 					FOREIGN KEY (equipment_id) 	REFERENCES EQUIPMENT(equipment_id)
 					);

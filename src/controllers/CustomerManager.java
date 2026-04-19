@@ -3,6 +3,8 @@ package controllers;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
+
 import domain.Customer;
 import persistence.CustomerDAO;
 
@@ -32,12 +34,46 @@ public class CustomerManager {
 		return null;
 	}
 	
-	public void add(Customer customer) throws SQLException {
+	public void add(
+			String firstName, 
+			String surname,
+			String phoneNumber,
+			String email
+			) throws SQLException {
+		Customer customer = new Customer(
+			UUID.randomUUID().toString(), 
+			firstName, 
+			surname, 
+			phoneNumber, 
+			email, 
+			null, 
+			"F");
+		
 		customerDAO.add(customer);
 		load();
 	}
 	
-	public void update(Customer customer) throws SQLException {
+	public void update(
+		String id,
+		String firstname,
+		String surname,
+		String phonenumber,
+		String email,
+		String notes,
+		String isBanned
+			) throws SQLException {
+		
+		Customer customer = getById(id);
+		
+		if (customer != null) {
+			if (firstname != "" || firstname != null) {customer.setFirstName(firstname);};
+			if (surname != "" || surname != null) {customer.setSurname(surname);};
+			if (phonenumber != "" || phonenumber != null) {customer.setPhoneNumber(phonenumber);}
+			if (email != "" || email != null) {customer.setEmail(email);};
+			if (notes != "" || notes != null) {customer.setNotes(notes);};
+			if (isBanned.toUpperCase() == "T" || isBanned.toUpperCase() == "F") {customer.setBanned(isBanned.toUpperCase());};
+		}
+	
 		customerDAO.update(customer);
 		load();
 	}

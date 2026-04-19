@@ -2,9 +2,14 @@ package presentation;
 
 import domain.*;
 import persistence.*;
+
+import java.sql.SQLException;
 import java.util.Scanner;
+import application.*;
 
 public class UIManager {
+
+	private SystemDriver systemManager;
 
     private final Scanner scanner = new Scanner(System.in);
     private final CustomerDAO  customerDAO  = new CustomerDAO();
@@ -12,7 +17,8 @@ public class UIManager {
     private final EquipmentDAO equipmentDAO = new EquipmentDAO();
     private final RentalDAO    rentalDAO    = new RentalDAO();
 
-    public void start() {
+    public void start(SystemDriver systemManager) throws SQLException {
+    	this.systemManager = systemManager;
         boolean running = true;
         while (running) {
             System.out.println("\n--- MAIN MENU ---");
@@ -35,7 +41,7 @@ public class UIManager {
     }
 
     // CUSTOMER MENU
-    private void customerMenu() {
+    private void customerMenu() throws SQLException {
         boolean running = true;
         while (running) {
             System.out.println("\n--- CUSTOMER MENU ---");
@@ -47,8 +53,26 @@ public class UIManager {
             System.out.print("Choose an option: ");
 
             switch (scanner.nextLine().trim()) {
-                case "1" -> { /* TODO: view all customers */ }
-                case "2" -> { /* TODO: add customer */ }
+                case "1" -> { for (Customer customer : systemManager.getCustomerManager().getAll()) {
+                	System.out.println(customer);}
+                }
+                case "2" -> {
+                	try {
+	                	System.out.println("Enter First Name: ");
+	                	String firstName = scanner.nextLine().trim();
+	                	System.out.println("Enter Surname: ");
+	                	String surname = scanner.nextLine().trim();
+	                	System.out.println("Enter Email: ");
+	                	String email = scanner.nextLine().trim();
+	                	System.out.println("Enter Phone Number: ");
+	                	String phone = scanner.nextLine().trim();
+	                	
+	                	systemManager.getCustomerManager().add(firstName, surname, phone, email);
+	                	System.out.println("Customer Added!");
+                	} catch (Exception e) {
+                		System.out.println(e.getMessage());
+                	}
+                }
                 case "3" -> { /* TODO: edit customer */ }
                 case "4" -> { /* TODO: remove customer */ }
                 case "0" -> running = false;

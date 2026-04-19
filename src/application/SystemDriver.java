@@ -11,18 +11,22 @@ import persistence.DatabaseManager;
 
 public class SystemDriver {
 	
+	CustomerManager customerManager;
+	InventoryManager inventoryManager;
+	RentalManager rentalManager;
+	
 	
 	public SystemDriver() {
 		try {
 			DatabaseManager.initDatabase();
 			
-			CustomerManager customerManager = new CustomerManager();
-			InventoryManager inventoryManager = new InventoryManager();
-			RentalManager rentalManager = new RentalManager();
+			customerManager = new CustomerManager();
+			inventoryManager = new InventoryManager();
+			rentalManager = new RentalManager();
 			
 			
 			UIManager userInterface = new UIManager();
-			userInterface.start();
+			userInterface.start(this);
 			
 			
 			
@@ -30,6 +34,10 @@ public class SystemDriver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public CustomerManager getCustomerManager() {
+		return this.customerManager;
 	}
 	
 	
