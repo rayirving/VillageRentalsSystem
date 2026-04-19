@@ -18,10 +18,10 @@ public class DatabaseManager {
 	public static void initDatabase() throws SQLException {
 		
 		try (Connection connection = DatabaseManager.getConnection();
-			Statement statment = connection.createStatement()) {
+			Statement statement = connection.createStatement()) {
 			
 			// Create CATEGORY table
-			statment.execute("""
+			statement.execute("""
 				CREATE TABLE IF NOT EXISTS CATEGORY (
 				category_id		VARCHAR(36) PRIMARY KEY,
 				name			VARCHAR(50) UNIQUE NOT NULL
@@ -29,19 +29,20 @@ public class DatabaseManager {
 			""");
 			
 			// Create EQUIPMENT table
-			statment.execute("""
-				CREATE TABLE IF NOT EXISTS EQUIPMENT (
-				equipment_id	VARCHAR(36) 	PRIMARY KEY,
-				name			VARCHAR(50)		UNIQUE NOT NULL,
-				description		VARCHAR(500),
-				dailyRentalCost	DECIMAL(10,2)	NOT NULL,
-				category_id		VARCHAR(36)		NOT NULL,
-				FOREIGN KEY (category_id) REFERENCES CATEGORY(category_id)
-				);
-			""");
+			statement.execute("""
+				    CREATE TABLE IF NOT EXISTS EQUIPMENT (
+				        equipment_id    VARCHAR(32)     PRIMARY KEY,
+				        name            VARCHAR(50)     UNIQUE NOT NULL,
+				        description     VARCHAR(500),
+				        dailyRentalCost DECIMAL(10,2)   NOT NULL,
+				        stock           INT             DEFAULT 0,
+				        category_id     VARCHAR(32)     NOT NULL,
+				        FOREIGN KEY (category_id) REFERENCES CATEGORY(category_id)
+				    );
+				""");
 			
 			// Create CUSTOMER table
-			statment.execute("""
+			statement.execute("""
 				CREATE TABLE IF NOT EXISTS CUSTOMER (
 				customer_id		VARCHAR(36) PRIMARY KEY,
 				firstname		VARCHAR(32) NOT NULL,
@@ -55,7 +56,7 @@ public class DatabaseManager {
 			
 			
 			// Create RENTAL table
-			statment.execute("""
+			statement.execute("""
 					CREATE TABLE IF NOT EXISTS RENTAL (
 					rental_id		VARCHAR(36) PRIMARY KEY,
 					notes			VARCHAR(50),

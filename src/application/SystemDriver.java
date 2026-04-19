@@ -39,6 +39,12 @@ public class SystemDriver {
 	public CustomerManager getCustomerManager() {
 		return this.customerManager;
 	}
+	public InventoryManager getInventoryManager() {
+		return this.inventoryManager;
+	}
+	public RentalManager getRentalManager() {
+		return this.rentalManager;
+	}
 	
 	
 	
