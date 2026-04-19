@@ -8,7 +8,7 @@ import domain.Customer;
 
 public class CustomerManager {
 	
-	ArrayList<Customer> customers = new ArrayList<>();
+	private ArrayList<Customer> customers = new ArrayList<>();
 	
 	/*
 	 * get customer by id

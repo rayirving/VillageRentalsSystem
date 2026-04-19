@@ -14,6 +14,15 @@ public class Equipment {
 		this.id = id;
 	}
 	
+	public Equipment(String id, String name, String desc, float dailyRentalCost, String category) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.desc = desc;
+		this.dailyRentalCost = dailyRentalCost;
+		this.category = category;
+	}
+
 	// --- Getters & Setters ---
 
 	public String getId() {return id;}
@@ -29,5 +38,12 @@ public class Equipment {
 
 	public String getCategory() {return category;}
 	public void setCategory(String category) {this.category = category;}
+
+	
+	@Override
+	public String toString() {
+		return "Equipment [id=" + id + ", name=" + name + ", desc=" + desc + ", dailyRentalCost=" + dailyRentalCost
+				+ ", category=" + category + "]";
+	}
 	
 }

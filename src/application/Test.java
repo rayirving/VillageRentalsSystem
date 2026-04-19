@@ -3,6 +3,7 @@ package application;
 import java.util.Scanner;
 
 import controllers.CustomerManager;
+import controllers.InventoryManager;
 import domain.Customer;
 
 public class Test {
@@ -11,11 +12,9 @@ public class Test {
 	
 	public static void main(String[] args) {
 		CustomerManager cm = new CustomerManager();
-//		Scanner keyboard = new Scanner(System.in);
-//		int choice = Integer.parseInt(keyboard.nextLine());
-		int option = 0;
+		InventoryManager im = new InventoryManager();
+
 			
-		String id;
 		System.out.println("hello");
 		// pre made data
 		Customer bob = new Customer("1", "Sponge", "Bob", "12345", "spongebob@mail", "", false);
@@ -32,34 +31,24 @@ public class Test {
 		cm.removeCustomer("1");
 		System.out.println(cm.getCustomer("1"));
 		
-		cm.modifyCustomer("2");
-		System.out.println(cm.getCustomer("2"));
+		//cm.modifyCustomer("2");
+		//System.out.println(cm.getCustomer("2"));
+		
+		System.out.println("\n-- Equipment Test --");
+		
+		im.addEquipment("1", "kitchen", "Pan", "yummy", 10.5f, 5);
+		im.addEquipment("2", "recreation", "Baseball Bat", "fdsafd", 5.0f, 3);
+		im.addEquipment("3", "Box", "Box", "Box", 5.0f, 4);
+		System.out.println(im.getEquipment("2"));
+		im.removeEquipment("2");
+		System.out.println(im.getEquipment("2"));
+		System.out.println(im.getStock("3"));
+		
+		
+		
 		
 
-//		while (option != 5) {
-//			customerManagerMenu();
-//			
-//			switch(option) {
-//			case 1:
-//				System.out.println("Enter id: ");
-//				id = keyboard.nextLine();
-//				System.out.println(cm.getCustomer(id).toString());
-//				break;
-//			case 2:
-//				System.out.println("i too lazy to do this rn lol");
-//				break;
-//			case 3:
-//				System.out.println("Enter id: ");
-//				id = keyboard.nextLine();
-//				cm.removeCustomer(id);
-//				break;
-//			case 4:
-//				System.out.println("Enter id: ");
-//				id = keyboard.nextLine();
-//				cm.modifyCustomer(id);
-//				break;
-//			}
-//		}
+
 	}
 	
 	static void customerManagerMenu()
