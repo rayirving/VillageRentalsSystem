@@ -73,8 +73,12 @@ public class UIManager {
                 		System.out.println(e.getMessage());
                 	}
                 }
-                case "3" -> { /* TODO: edit customer */ }
-                case "4" -> { /* TODO: remove customer */ }
+                case "3" -> {editCustomerMenu();}
+                case "4" -> { 
+                	System.out.println("Enter Customer Id: ");
+                	String id =  scanner.nextLine().trim();
+                	systemManager.getCustomerManager().remove(id);
+                }
                 case "0" -> running = false;
                 default  -> System.out.println("Invalid option.");
             }
@@ -150,5 +154,74 @@ public class UIManager {
                 default  -> System.out.println("Invalid option.");
             }
         }
+    }
+    private void editCustomerMenu() throws SQLException {
+    	boolean running = true;
+    	while (running) {
+    		System.out.println("\n--- EDIT CUSTOMER MENU ---");
+    		System.out.println("1. First name");
+    		System.out.println("2. Last name");
+    		System.out.println("3. Phone number");
+    		System.out.println("4. Email");
+    		System.out.println("5. Notes");
+    		System.out.println("6. Banned Status");
+    		System.out.println("0. Back");
+    		
+    		int choice = Integer.parseInt(scanner.nextLine());
+    		if (choice == 0) {
+    			running = false;
+    		}
+    		else {
+    			System.out.println("Please enter the id of the customer: ");
+    			String id = scanner.nextLine();
+    			switch (choice) {
+    			case 1 -> {
+    				System.out.println("Enter new First Name: ");
+    				String firstName = scanner.nextLine().trim();
+    				systemManager.customerManager.update(id, firstName, "",  "", "", "", "");
+    				System.out.println("First Name updated!");
+    			}
+    			case 2 -> {
+    				System.out.println("Enter new Last Name: ");
+    				String lastName = scanner.nextLine().trim();
+    				systemManager.customerManager.update(id, "", lastName,  "", "", "", "");
+    				System.out.println("Last Name updated!");
+    			}
+    			case 3 -> {
+    				System.out.println("Enter new Phone Number: ");
+    				String phoneNumber = scanner.nextLine().trim();
+    				systemManager.customerManager.update(id, "", "",  phoneNumber, "", "", "");
+    				System.out.println("Phone Number updated!");
+    			}
+    			case 4 -> {
+    				System.out.println("Enter new Email: ");
+    				String email = scanner.nextLine().trim();
+    				systemManager.customerManager.update(id, "", "",  "", email, "", "");
+    				System.out.println("Email updated!");
+    			}
+    			case 5 -> {
+    				System.out.println("Enter new Notes: ");
+    				String notes = scanner.nextLine().trim();
+    				systemManager.customerManager.update(id, "", "",  "", "", notes, "");
+    				System.out.println("Notes updated!");
+    			}
+    			case 6 -> {
+    				System.out.println("1. Ban Customer");
+    				System.out.println("2. Unban Customer");
+    				switch (scanner.nextLine().trim()) {
+    				case "1" -> {
+    					systemManager.customerManager.update(id, "", "",  "", "", "", "T");
+    					System.out.println("Banned Status updated!");}
+    				case "2" -> {
+    					systemManager.customerManager.update(id, "", "",  "", "", "", "F");
+    					System.out.println("Banned Status updated!");}
+    				default -> {System.out.println("Invalid option.");}
+    				}
+    			}
+    			default -> { System.out.println("Invalid option.");}
+    			}
+    			
+    		}
+    	}
     }
 }

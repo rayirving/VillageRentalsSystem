@@ -11,7 +11,7 @@ import persistence.DatabaseManager;
 
 public class SystemDriver {
 	
-	CustomerManager customerManager;
+	public CustomerManager customerManager;
 	InventoryManager inventoryManager;
 	RentalManager rentalManager;
 	
