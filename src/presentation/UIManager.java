@@ -86,7 +86,7 @@ public class UIManager {
     }
 
     // CATEGORY MENU
-    private void categoryMenu() {
+    private void categoryMenu() throws SQLException {
         boolean running = true;
         while (running) {
             System.out.println("\n--- CATEGORY MENU ---");
@@ -98,10 +98,24 @@ public class UIManager {
             System.out.print("Choose an option: ");
 
             switch (scanner.nextLine().trim()) {
-                case "1" -> { /* TODO: view all categories */ }
-                case "2" -> { /* TODO: add category */ }
-                case "3" -> { /* TODO: edit category */ }
-                case "4" -> { /* TODO: remove category */ }
+                case "1" -> {System.out.println(systemManager.getInventoryManager().getAllCategories());}
+                case "2" -> { 
+                	System.out.println("Enter Category Name: ");
+                	String name = scanner.nextLine().trim();
+                	systemManager.getInventoryManager().addCategory(name);
+                }
+                case "3" -> {
+                	System.out.println("Enter Category Id: ");
+                	String id = scanner.nextLine().trim();
+                	System.out.println("Enter Category Name: ");
+                	String name = scanner.nextLine().trim();
+                	systemManager.getInventoryManager().updateCategory(id, name);
+                }
+                case "4" -> { 
+                	System.out.println("Enter Category Id: ");
+                	String id = scanner.nextLine().trim();
+                	systemManager.getInventoryManager().removeCategory(id);
+                }
                 case "0" -> running = false;
                 default  -> System.out.println("Invalid option.");
             }
@@ -109,7 +123,7 @@ public class UIManager {
     }
 
     // EQUIPMENT MENU
-    private void equipmentMenu() {
+    private void equipmentMenu() throws SQLException {
         boolean running = true;
         while (running) {
             System.out.println("\n--- EQUIPMENT MENU ---");
@@ -121,13 +135,28 @@ public class UIManager {
             System.out.print("Choose an option: ");
 
             switch (scanner.nextLine().trim()) {
-                case "1" -> { /* TODO: view all equipment */ }
-                case "2" -> { /* TODO: add equipment */ }
-                case "3" -> { /* TODO: edit equipment */ }
-                case "4" -> { /* TODO: remove equipment */ }
-                case "0" -> running = false;
-                default  -> System.out.println("Invalid option.");
+            case "1" -> { systemManager.getInventoryManager().getAllEquipment(); }
+            case "2" -> { 
+            	System.out.println("Enter Name: ");
+            	String name = scanner.nextLine().trim();
+            	System.out.println("Enter Description: ");
+            	String description = scanner.nextLine().trim();
+            	System.out.println("Enter Daily Rental Cost: ");
+            	double dailyRentalCost = Double.parseDouble(scanner.nextLine().trim());
+            	System.out.println("Enter Category Id:");
+            	String category = scanner.nextLine().trim();
+            	/*TODO: add check vaild category*/
+            	systemManager.getInventoryManager().addEquipment(name, description, dailyRentalCost, category);
             }
+            case "3" -> { /* TODO: edit equipment */ }
+            case "4" -> { 
+            	System.out.println("Enter Equipment Id: ");
+            	String equipment = scanner.nextLine().trim();
+            	systemManager.getInventoryManager().removeEquipment(equipment);
+            }
+            case "0" -> running = false;
+            default  -> System.out.println("Invalid option.");
+        }
         }
     }
 
