@@ -1,97 +1,72 @@
 package controllers;
 
-import domain.Rental;
-import persistence.RentalDAO;
-import java.sql.Date;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+
+import domain.Customer;
+import domain.Equipment;
+import domain.Rental;
 import java.util.UUID;
 
 public class RentalManager {
-
-    private List<Rental>   rentals;
-    private final RentalDAO rentalDAO = new RentalDAO();
-
-    public RentalManager() {
-        load();
-    }
-
-    private void load() {
-        rentals = rentalDAO.loadAll();
-    }
-
-    // --- Getters ---
-
-    public List<Rental> getAllRentals() { return rentals; }
-
-    public Rental getById(String id) {
-        return rentals.stream()
-                      .filter(r -> r.getId().equals(id))
-                      .findFirst()
-                      .orElse(null);
-    }
-
-    public List<Rental> getByCustomerId(String customerId) {
-        return rentals.stream()
-                      .filter(r -> r.getCustomerId().equals(customerId))
-                      .toList();
-    }
-
-    public List<Rental> getByEquipmentId(String equipmentId) {
-        return rentals.stream()
-                      .filter(r -> r.getEquipmentId().equals(equipmentId))
-                      .toList();
-    }
-
-    public List<Rental> getByStatus(String status) {
-        return rentals.stream()
-                      .filter(r -> r.getStatus().equalsIgnoreCase(status))
-                      .toList();
-    }
-
-    // --- Add / Remove ---
-
-    public void addRental(String id, String notes, String status,
-                          Date rentalDate, Date returnDate,
-                          String customerId, String equipmentId) throws SQLException {
-        Rental rental = new Rental(
-            id, notes, status,
-            rentalDate, returnDate, customerId, equipmentId
-        );
-        rentalDAO.add(rental);
-        load();
-    }
-
-    public void removeRental(String id) throws SQLException {
-        rentalDAO.remove(id);
-        load();
-    }
-
-    // --- Edit ---
-
-    public void updateRental(Rental rental) throws SQLException {
-        rentalDAO.update(rental);
-        load();
-    }
-
-    public void extendReturnDate(String id, int days) throws SQLException {
-        rentalDAO.extendReturnDate(id, days);
-        load();
-    }
-
-    public void setReturnDate(String id, Date newReturnDate) throws SQLException {
-        Rental rental = getById(id);
-        if (rental == null) { System.out.println("Rental not found."); return; }
-        rental.setReturnDate(newReturnDate);
-        rentalDAO.update(rental);
-        load();
-    }
-
-    public void setStatus(String id, String status) throws SQLException {
-        Rental rental = getById(id);
-        if (rental == null) { System.out.println("Rental not found."); return; }
-        rental.setStatus(status);
-        rentalDAO.update(rental);
-        load();
-    }
+	private List<Rental> rentals;
+	private int defaultLoanPeriod = 30;
+	
+	public RentalManager() {
+		this.rentals = new ArrayList<>();
+	}
+	
+	public void addRental(Customer customer, String notes) {
+		UUID uuid = UUID.randomUUID();
+		Rental rental = new Rental(uuid.toString());
+		
+		rental
+		.setCustomer(customer)
+		.incrementReturnDate(defaultLoanPeriod)
+		.setNotes(notes);
+	}
+	
+	public boolean removeRental(String rentalID) {
+		for (Rental rental : rentals) {
+			if (rental.getId() == rentalID) {
+				rentals.remove(rental);
+				return true;
+			}
+		} 
+		return false;
+	}
+	
+	
+	public List<Rental> getRentalsById(String rentalID) {
+		List<Rental> matchedRentals = new ArrayList<>();
+		for (Rental rental : rentals) {
+			if (rental.getId().contains(rentalID)) {
+				matchedRentals.add(rental);
+			}
+		}
+		return matchedRentals;
+	}
+	public List<Rental> getRentalsByCustomer(String name) {
+		List<Rental> matchedRentals = new ArrayList<>();
+		for (Rental rental : rentals) {
+			if (
+					rental.getCustomer().getFirstName().contains(name.trim()) || 
+					rental.getCustomer().getSurname().contains(name.trim())) {
+				matchedRentals.add(rental);
+			}
+		}
+		return matchedRentals;
+	}
+	public List<Rental> getRentalsByEquipment(String name) {
+		List<Rental> matchedRentals = new ArrayList<>();
+		for (Rental rental : rentals) {
+			for (Equipment equipment : rental.getRentalItems().keySet()) {
+				if (equipment.getName().contains(name)) {
+					matchedRentals.add(rental);
+					break;
+				}
+			}
+		}
+		return matchedRentals;
+	}
 }
