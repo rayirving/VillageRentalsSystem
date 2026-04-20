@@ -35,18 +35,19 @@ public class CustomerManager {
 	}
 	
 	public void add(
+			String id,
 			String firstName, 
 			String surname,
 			String phoneNumber,
 			String email
 			) throws SQLException {
 		Customer customer = new Customer(
-			UUID.randomUUID().toString(), 
+			id, 
 			firstName, 
 			surname, 
 			phoneNumber, 
 			email, 
-			null, 
+			"", 
 			"F");
 		
 		customerDAO.add(customer);

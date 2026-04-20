@@ -51,10 +51,10 @@ public class InventoryManager {
 
     // --- Equipment ---
 
-    public void addEquipment(String name, String desc,
+    public void addEquipment(String id, String name, String desc,
                              double dailyRentalCost, String categoryId) throws SQLException {
         Equipment equipment = new Equipment(
-            UUID.randomUUID().toString(), name, desc, dailyRentalCost, categoryId
+            id, name, desc, dailyRentalCost, categoryId
         );
         equipmentDAO.add(equipment);
         load();
@@ -84,7 +84,7 @@ public class InventoryManager {
 
     // --- Categories ---
 
-    public void addCategory(String name) throws SQLException {
+    public void addCategory(String id, String name) throws SQLException {
         categoryDAO.add(UUID.randomUUID().toString(), name);
         load();
     }

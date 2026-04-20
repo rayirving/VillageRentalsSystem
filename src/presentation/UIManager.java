@@ -30,12 +30,30 @@ public class UIManager {
             System.out.print("Choose an option: ");
 
             switch (scanner.nextLine().trim()) {
-                case "1" -> customerMenu();
-                case "2" -> categoryMenu();
-                case "3" -> equipmentMenu();
-                case "4" -> rentalMenu();
-                case "0" -> running = false;
-                default  -> System.out.println("Invalid option.");
+                case "1" -> {
+                	customerMenu();
+                	break;
+                }
+                case "2" -> {
+                	categoryMenu();
+                	break;
+                }
+                case "3" -> {
+                	equipmentMenu();
+                	break;
+                }
+                case "4" -> {
+                	rentalMenu();
+                	break;
+                }
+                case "0" -> {
+                	running = false;
+                	break;
+                }
+                default  -> {
+                	System.out.println("Invalid option.");
+                	break;
+                }
             }
         }
     }
@@ -58,6 +76,8 @@ public class UIManager {
                 }
                 case "2" -> {
                 	try {
+                		System.out.println("Enter ID: ");
+	                	String id = scanner.nextLine().trim();
 	                	System.out.println("Enter First Name: ");
 	                	String firstName = scanner.nextLine().trim();
 	                	System.out.println("Enter Surname: ");
@@ -67,7 +87,7 @@ public class UIManager {
 	                	System.out.println("Enter Phone Number: ");
 	                	String phone = scanner.nextLine().trim();
 	                	
-	                	systemManager.getCustomerManager().add(firstName, surname, phone, email);
+	                	systemManager.getCustomerManager().add(id, firstName, surname, phone, email);
 	                	System.out.println("Customer Added!");
                 	} catch (Exception e) {
                 		System.out.println(e.getMessage());
@@ -132,7 +152,7 @@ public class UIManager {
     }
 
     // RENTAL MENU
-    private void rentalMenu() {
+    private void rentalMenu() throws SQLException {
         boolean running = true;
         while (running) {
             System.out.println("\n--- RENTAL MENU ---");
@@ -145,16 +165,163 @@ public class UIManager {
             System.out.print("Choose an option: ");
 
             switch (scanner.nextLine().trim()) {
-                case "1" -> { /* TODO: view all rentals */ }
-                case "2" -> { /* TODO: add rental */ }
-                case "3" -> { /* TODO: edit rental */ }
-                case "4" -> { /* TODO: extend return date */ }
-                case "5" -> { /* TODO: remove rental */ }
-                case "0" -> running = false;
-                default  -> System.out.println("Invalid option.");
+                case "1" -> {
+                    for (Rental rental : systemManager.getRentalManager().getAllRentals()) {
+                        System.out.println(rental);
+                    }
+                    break;
+                }
+                case "2" -> {
+                    try {
+                        for (Customer customer : systemManager.getCustomerManager().getAll()) {
+                            System.out.println(customer);
+                        }
+                        System.out.println("Enter Customer ID: ");
+                        String customerId = scanner.nextLine().trim();
+
+                        systemManager.getInventoryManager().getAllEquipment()
+                            .forEach((e, stock) -> System.out.println(e + " | Stock: " + stock));
+                        System.out.println("Enter Equipment ID: ");
+                        String equipmentId = scanner.nextLine().trim();
+
+                        System.out.println("Enter Status (e.g. ACTIVE, RETURNED): ");
+                        String status = scanner.nextLine().trim();
+
+                        System.out.println("Enter Rental Date (YYYY-MM-DD): ");
+                        java.sql.Date rentalDate = java.sql.Date.valueOf(scanner.nextLine().trim());
+
+                        System.out.println(rentalDate);
+                        
+                        System.out.println("Enter Return Date (YYYY-MM-DD): ");
+                        java.sql.Date returnDate = java.sql.Date.valueOf(scanner.nextLine().trim());
+
+                        System.out.println(returnDate);
+                        
+                        System.out.println("Enter Notes: ");
+                        String notes = scanner.nextLine().trim();
+
+                        systemManager.getRentalManager().addRental(
+                            notes, status, rentalDate, returnDate, customerId, equipmentId
+                        );
+                        System.out.println("Rental Added!");
+                    } catch (Exception e) {
+                        System.out.println("Invalid Rental Entered");
+                    }
+                    break;
+                }
+                case "3" -> { 
+                	editRentalMenu(); 
+                	break;
+                	}
+                case "4" -> {
+                    try {
+                        for (Rental rental : systemManager.getRentalManager().getAllRentals()) {
+                            System.out.println(rental);
+                        }
+                        System.out.println("Enter Rental ID: ");
+                        String id = scanner.nextLine().trim();
+
+                        System.out.println("Enter number of days to extend: ");
+                        int days = Integer.parseInt(scanner.nextLine().trim());
+
+                        systemManager.getRentalManager().extendReturnDate(id, days);
+                        System.out.println("Return date extended by " + days + " day(s)!");
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                }
+                case "5" -> {
+                    for (Rental rental : systemManager.getRentalManager().getAllRentals()) {
+                        System.out.println(rental);
+                    }
+                    System.out.println("Enter Rental ID: ");
+                    String id = scanner.nextLine().trim();
+                    systemManager.getRentalManager().removeRental(id);
+                    System.out.println("Rental Removed!");
+                }
+                case "0" -> {
+                	running = false;
+                	break;
+                	}
+                default  -> {
+                	System.out.println("Invalid option.");
+                	break;
+                }
+                
             }
         }
     }
+
+    private void editRentalMenu() throws SQLException {
+        boolean running = true;
+        while (running) {
+            System.out.println("\n--- EDIT RENTAL MENU ---");
+            System.out.println("1. Status");
+            System.out.println("2. Return Date");
+            System.out.println("3. Notes");
+            System.out.println("4. Customer");
+            System.out.println("5. Equipment");
+            System.out.println("0. Back");
+
+            int choice = Integer.parseInt(scanner.nextLine().trim());
+            if (choice == 0) {
+                running = false;
+            } else {
+                for (Rental rental : systemManager.getRentalManager().getAllRentals()) {
+                    System.out.println(rental);
+                }
+                System.out.println("Enter Rental ID: ");
+                String id = scanner.nextLine().trim();
+
+                Rental rental = systemManager.getRentalManager().getById(id);
+                if (rental == null) { System.out.println("Rental not found."); continue; }
+
+                switch (choice) {
+                    case 1 -> {
+                        System.out.println("Enter new Status (e.g. ACTIVE, RETURNED): ");
+                        String status = scanner.nextLine().trim();
+                        systemManager.getRentalManager().setStatus(id, status);
+                        System.out.println("Status updated!");
+                    }
+                    case 2 -> {
+                        System.out.println("Enter new Return Date (YYYY-MM-DD): ");
+                        java.sql.Date returnDate = java.sql.Date.valueOf(scanner.nextLine().trim());
+                        systemManager.getRentalManager().setReturnDate(id, returnDate);
+                        System.out.println("Return Date updated!");
+                    }
+                    case 3 -> {
+                        System.out.println("Enter new Notes: ");
+                        String notes = scanner.nextLine().trim();
+                        rental.setNotes(notes);
+                        systemManager.getRentalManager().updateRental(rental);
+                        System.out.println("Notes updated!");
+                    }
+                    case 4 -> {
+                        for (Customer customer : systemManager.getCustomerManager().getAll()) {
+                            System.out.println(customer);
+                        }
+                        System.out.println("Enter new Customer ID: ");
+                        String customerId = scanner.nextLine().trim();
+                        rental.setCustomerId(customerId);
+                        systemManager.getRentalManager().updateRental(rental);
+                        System.out.println("Customer updated!");
+                    }
+                    case 5 -> {
+                        systemManager.getInventoryManager().getAllEquipment()
+                            .forEach((e, stock) -> System.out.println(e + " | Stock: " + stock));
+                        System.out.println("Enter new Equipment ID: ");
+                        String equipmentId = scanner.nextLine().trim();
+                        rental.setEquipmentId(equipmentId);
+                        systemManager.getRentalManager().updateRental(rental);
+                        System.out.println("Equipment updated!");
+                    }
+                    default -> System.out.println("Invalid option.");
+                }
+            }
+        }
+    }
+    
     private void editCustomerMenu() throws SQLException {
     	boolean running = true;
     	while (running) {
