@@ -1,9 +1,11 @@
 package controllers;
 
+import domain.Category;
 import domain.Equipment;
 import persistence.CategoryDAO;
 import persistence.EquipmentDAO;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -28,8 +30,36 @@ public class InventoryManager {
 
     // --- Getters ---
 
-    public HashMap<Equipment, Integer> getAllEquipment()  { return equipments; }
-    public HashMap<String, String>     getAllCategories() { return categories; }
+    public ArrayList<Equipment> getAllEquipment()  {
+    	ArrayList<Equipment> equipmentList = new ArrayList<>();
+    	for (Equipment equipment : equipments.keySet()) {
+    		equipmentList.add(equipment);
+    	}; 
+    	if (equipmentList.isEmpty() == false) {
+    		return equipmentList;
+    	};
+    	return null;
+    }
+    
+    public HashMap<Equipment, Integer> getInventory() {
+    	if (equipments.isEmpty() == false) {
+    		return equipments;
+    	}
+    	else {
+    		return null;
+    	}
+    }
+    
+    public ArrayList<Category> getAllCategories() {
+    	ArrayList<Category> categoryList = new ArrayList<>();
+    	for (String category_id : categories.keySet()) {
+    		categoryList.add(new Category(category_id, categories.get(category_id)));
+    	}
+    	if (categoryList.isEmpty() == false) {
+    		return categoryList;
+    	}
+    	return null; 
+    }
 
     public Equipment getEquipmentById(String id) {
         for (Equipment equipment : equipments.keySet()) {
@@ -38,8 +68,11 @@ public class InventoryManager {
         return null;
     }
 
-    public String getCategoryById(String id) {
-        return categories.getOrDefault(id, null);
+    public Category getCategoryById(String id) {
+    	for (String category : categories.keySet()) {
+            if (category.equals(id)) return new Category(category, categories.get(category));
+        }
+        return null;
     }
 
     public Integer getStockById(String id) {
@@ -85,7 +118,7 @@ public class InventoryManager {
     // --- Categories ---
 
     public void addCategory(String id, String name) throws SQLException {
-        categoryDAO.add(UUID.randomUUID().toString(), name);
+        categoryDAO.add(id, name);
         load();
     }
 

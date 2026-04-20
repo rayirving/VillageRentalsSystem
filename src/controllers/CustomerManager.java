@@ -67,11 +67,11 @@ public class CustomerManager {
 		Customer customer = getById(id);
 		
 		if (customer != null) {
-			if (firstname != "" || firstname != null) {customer.setFirstName(firstname);};
-			if (surname != "" || surname != null) {customer.setSurname(surname);};
-			if (phonenumber != "" || phonenumber != null) {customer.setPhoneNumber(phonenumber);}
-			if (email != "" || email != null) {customer.setEmail(email);};
-			if (notes != "" || notes != null) {customer.setNotes(notes);};
+			if (firstname != null) {customer.setFirstName(firstname);};
+			if (surname != null) {customer.setSurname(surname);};
+			if (phonenumber != null) {customer.setPhoneNumber(phonenumber);}
+			if (email != null) {customer.setEmail(email);};
+			if (notes != null) {customer.setNotes(notes);};
 			if (isBanned.toUpperCase() == "T" || isBanned.toUpperCase() == "F") {customer.setBanned(isBanned.toUpperCase());};
 		}
 	

@@ -106,7 +106,7 @@ public class UIManager {
     }
 
     // CATEGORY MENU
-    private void categoryMenu() {
+    private void categoryMenu() throws SQLException{
         boolean running = true;
         while (running) {
             System.out.println("\n--- CATEGORY MENU ---");
@@ -118,10 +118,33 @@ public class UIManager {
             System.out.print("Choose an option: ");
 
             switch (scanner.nextLine().trim()) {
-                case "1" -> { /* TODO: view all categories */ }
-                case "2" -> { /* TODO: add category */ }
-                case "3" -> { /* TODO: edit category */ }
-                case "4" -> { /* TODO: remove category */ }
+            case "1" -> {
+            	if (systemManager.getInventoryManager().getAllCategories() != null) {
+            		System.out.println(systemManager.getInventoryManager().getAllCategories());
+            	} else {
+            		System.out.println("No Categories exist!");
+            		return;
+            	}
+            }
+            case "2" -> { 
+            	System.out.println("Enter Category ID: ");
+            	String id = scanner.nextLine().trim();
+            	System.out.println("Enter Category Name: ");
+            	String name = scanner.nextLine().trim();
+            	systemManager.getInventoryManager().addCategory(id, name);
+            }
+            case "3" -> {
+            	System.out.println("Enter Category Id: ");
+            	String id = scanner.nextLine().trim();
+            	System.out.println("Enter Category Name: ");
+            	String name = scanner.nextLine().trim();
+            	systemManager.getInventoryManager().updateCategory(id, name);
+            }
+            case "4" -> { 
+            	System.out.println("Enter Category Id: ");
+            	String id = scanner.nextLine().trim();
+            	systemManager.getInventoryManager().removeCategory(id);
+            }
                 case "0" -> running = false;
                 default  -> System.out.println("Invalid option.");
             }
@@ -129,7 +152,7 @@ public class UIManager {
     }
 
     // EQUIPMENT MENU
-    private void equipmentMenu() {
+    private void equipmentMenu() throws SQLException{
         boolean running = true;
         while (running) {
             System.out.println("\n--- EQUIPMENT MENU ---");
@@ -141,10 +164,30 @@ public class UIManager {
             System.out.print("Choose an option: ");
 
             switch (scanner.nextLine().trim()) {
-                case "1" -> { /* TODO: view all equipment */ }
-                case "2" -> { /* TODO: add equipment */ }
-                case "3" -> { /* TODO: edit equipment */ }
-                case "4" -> { /* TODO: remove equipment */ }
+            case "1" -> { systemManager.getInventoryManager().getAllEquipment(); }
+            case "2" -> {
+            	try {
+					System.out.println("Enter ID: ");
+					String id = scanner.nextLine().trim();
+					System.out.println("Enter Name: ");
+					String name = scanner.nextLine().trim();
+					System.out.println("Enter Description: ");
+					String description = scanner.nextLine().trim();
+					System.out.println("Enter Daily Rental Cost: ");
+					double dailyRentalCost = Double.parseDouble(scanner.nextLine().trim());
+					System.out.println("Enter Category Id:");
+					String category = scanner.nextLine().trim();
+					systemManager.getInventoryManager().addEquipment(id, name, description, dailyRentalCost, category);
+				} catch (Exception e) {
+					System.out.println("Invalid Equipment");
+				}
+            }
+            case "3" -> { /* TODO: edit equipment */ }
+            case "4" -> { 
+            	System.out.println("Enter Equipment Id: ");
+            	String equipment = scanner.nextLine().trim();
+            	systemManager.getInventoryManager().removeEquipment(equipment);
+            }
                 case "0" -> running = false;
                 default  -> System.out.println("Invalid option.");
             }
@@ -179,7 +222,7 @@ public class UIManager {
                         System.out.println("Enter Customer ID: ");
                         String customerId = scanner.nextLine().trim();
 
-                        systemManager.getInventoryManager().getAllEquipment()
+                        systemManager.getInventoryManager().getInventory()
                             .forEach((e, stock) -> System.out.println(e + " | Stock: " + stock));
                         System.out.println("Enter Equipment ID: ");
                         String equipmentId = scanner.nextLine().trim();
@@ -308,8 +351,15 @@ public class UIManager {
                         System.out.println("Customer updated!");
                     }
                     case 5 -> {
-                        systemManager.getInventoryManager().getAllEquipment()
+                    	if (systemManager.getInventoryManager().getInventory().isEmpty() == false) {
+                    		systemManager.getInventoryManager().getInventory()
                             .forEach((e, stock) -> System.out.println(e + " | Stock: " + stock));
+                    	}
+                    	else {
+                    		System.out.println("Not Equipment in Inventory!");
+                    		return;
+                    	}
+                        
                         System.out.println("Enter new Equipment ID: ");
                         String equipmentId = scanner.nextLine().trim();
                         rental.setEquipmentId(equipmentId);
@@ -345,31 +395,31 @@ public class UIManager {
     			case 1 -> {
     				System.out.println("Enter new First Name: ");
     				String firstName = scanner.nextLine().trim();
-    				systemManager.customerManager.update(id, firstName, "",  "", "", "", "");
+    				systemManager.customerManager.update(id, firstName, null,  null, null, null, "");
     				System.out.println("First Name updated!");
     			}
     			case 2 -> {
     				System.out.println("Enter new Last Name: ");
     				String lastName = scanner.nextLine().trim();
-    				systemManager.customerManager.update(id, "", lastName,  "", "", "", "");
+    				systemManager.customerManager.update(id, null, lastName,  null, null, null, "");
     				System.out.println("Last Name updated!");
     			}
     			case 3 -> {
     				System.out.println("Enter new Phone Number: ");
     				String phoneNumber = scanner.nextLine().trim();
-    				systemManager.customerManager.update(id, "", "",  phoneNumber, "", "", "");
+    				systemManager.customerManager.update(id, null, null,  phoneNumber, null, null, "");
     				System.out.println("Phone Number updated!");
     			}
     			case 4 -> {
     				System.out.println("Enter new Email: ");
     				String email = scanner.nextLine().trim();
-    				systemManager.customerManager.update(id, "", "",  "", email, "", "");
+    				systemManager.customerManager.update(id, null, null,  null, email, null, "");
     				System.out.println("Email updated!");
     			}
     			case 5 -> {
     				System.out.println("Enter new Notes: ");
     				String notes = scanner.nextLine().trim();
-    				systemManager.customerManager.update(id, "", "",  "", "", notes, "");
+    				systemManager.customerManager.update(id, null, null,  null, null, notes, "");
     				System.out.println("Notes updated!");
     			}
     			case 6 -> {
@@ -377,10 +427,10 @@ public class UIManager {
     				System.out.println("2. Unban Customer");
     				switch (scanner.nextLine().trim()) {
     				case "1" -> {
-    					systemManager.customerManager.update(id, "", "",  "", "", "", "T");
+    					systemManager.customerManager.update(id, null, null,  null, null, null, "T");
     					System.out.println("Banned Status updated!");}
     				case "2" -> {
-    					systemManager.customerManager.update(id, "", "",  "", "", "", "F");
+    					systemManager.customerManager.update(id, null, null,  null, null, null, "F");
     					System.out.println("Banned Status updated!");}
     				default -> {System.out.println("Invalid option.");}
     				}
