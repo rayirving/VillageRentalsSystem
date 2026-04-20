@@ -29,6 +29,7 @@ public class Customer {
 	// --- Getters & Setters ---
 
 	public String getId() {return id;}
+	public Customer setId(String id) {this.id = id; return this;}
 
 	public String getFirstName() {return firstName;}
 	public Customer setFirstName(String firstName) {this.firstName = firstName; return this;}
@@ -51,8 +52,8 @@ public class Customer {
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", firstName=" + firstName + ", surname=" + surname + ", phoneNumber="
-				+ phoneNumber + ", email=" + email + ", notes=" + notes + ", isBanned=" + isBanned + "]";
+		return "[" + id + "] " + firstName + ", " + surname + " | "
+				+ phoneNumber + " | " + email + " | Banned? [" + isBanned + "] | " + notes;
 	}
 	
 	

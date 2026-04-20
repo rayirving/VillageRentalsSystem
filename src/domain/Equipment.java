@@ -1,49 +1,37 @@
 package domain;
 
 public class Equipment {
-	private String id;
-	private String name;
-	private String desc;
-	
-	private float dailyRentalCost;
-	private String category;
-	
-	// --- Constructor ---
-	
-	public Equipment(String id) {
-		this.id = id;
-	}
-	
-	public Equipment(String id, String name, String desc, float dailyRentalCost, String category) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.desc = desc;
-		this.dailyRentalCost = dailyRentalCost;
-		this.category = category;
-	}
+    private String id;
+    private String name;
+    private String description;
+    private double dailyRentalCost;
+    private String categoryId;
 
-	// --- Getters & Setters ---
+    public Equipment(String id, String name, String description,
+                     double dailyRentalCost, String categoryId) {
+        this.id              = id;
+        this.name            = name;
+        this.description     = description;
+        this.dailyRentalCost = dailyRentalCost;
+        this.categoryId      = categoryId;
+    }
 
-	public String getId() {return id;}
+    public String getId()               { return id; }
+    public String getName()             { return name; }
+    public String getDescription()      { return description; }
+    public double getDailyRentalCost()  { return dailyRentalCost; }
+    public String getCategoryId()       { return categoryId; }
 
-	public String getName() {return name;}
-	public void setName(String name) {this.name = name;}
+    public void setName(String name)                   { this.name = name; }
+    public void setDescription(String description)     { this.description = description; }
+    public void setDailyRentalCost(double cost)        { this.dailyRentalCost = cost; }
+    public void setCategoryId(String categoryId)       { this.categoryId = categoryId; }
 
-	public String getDesc() {return desc;}
-	public void setDesc(String desc) {this.desc = desc;}
+    @Override
+    public String toString() {
+        return "[" + id + "] " + name +
+               " | $" + dailyRentalCost + "/day" +
+               " | Category: " + categoryId;
+    }
 
-	public float getDailyRentalCost() {return dailyRentalCost;}
-	public void setDailyRentalCost(float dailyRentalCost) {this.dailyRentalCost = dailyRentalCost;}
-
-	public String getCategory() {return category;}
-	public void setCategory(String category) {this.category = category;}
-
-	
-	@Override
-	public String toString() {
-		return "Equipment [id=" + id + ", name=" + name + ", desc=" + desc + ", dailyRentalCost=" + dailyRentalCost
-				+ ", category=" + category + "]";
-	}
-	
 }
