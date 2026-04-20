@@ -51,11 +51,11 @@ public class RentalManager {
 
     // --- Add / Remove ---
 
-    public void addRental(String notes, String status,
+    public void addRental(String id, String notes, String status,
                           Date rentalDate, Date returnDate,
                           String customerId, String equipmentId) throws SQLException {
         Rental rental = new Rental(
-            UUID.randomUUID().toString(), notes, status,
+            id, notes, status,
             rentalDate, returnDate, customerId, equipmentId
         );
         rentalDAO.add(rental);
