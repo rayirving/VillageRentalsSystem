@@ -1,122 +1,134 @@
 package controllers;
 
+import domain.Category;
+import domain.Equipment;
+import persistence.CategoryDAO;
+import persistence.EquipmentDAO;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
-
-import domain.Equipment;
+import java.util.UUID;
 
 public class InventoryManager {
-	private ArrayList<Equipment> equipments = new ArrayList<>();
-	private HashMap<Equipment, Integer> inventory = new HashMap<>();
-	
-	public void addEquipment(String id, String category, String name, String desc, float dailyRentalCost) {
-		Equipment equipment = new Equipment(id, name, desc, dailyRentalCost, category);
-		equipments.add(equipment);
-		inventory.put(equipment, 0);
-	}
-	
-	public void removeEquipment(String id) {
-		for (int i = 0; i < equipments.size(); i++) {
-			if (equipments.get(i).getId().equals(id)) {
-				equipments.remove(i);
-				inventory.remove(getEquipment(id));
-				System.out.println("Equipment removed.");
-				return;
-			}
-		}
-		System.out.println("Equipment not found!");
-	}
-	
-	public Equipment getEquipment(String id) {
-		for (Equipment equipment : equipments) {
-			if (equipment.getId().equals(id)) {
-				return equipment;
-			}
-		}
-		System.out.println("Equipment not found!");
-		return null;
-	}
-	
-	public void editEquipment(String id) {
-		Equipment equipment = getEquipment(id);
-		
-		System.out.println("What would you like to edit?");
-		System.out.println("1. Name");
-		System.out.println("2. Description");
-		System.out.println("3. Daily rental cost");
-		System.out.println("4. Category");
 
-		Scanner keyboard;
-		keyboard = new Scanner(System.in);
-		int choice = Integer.parseInt(keyboard.nextLine());
-		
-		switch(choice) {
-		case 1:
-			System.out.println("Enter new name: ");
-			equipment.setName(keyboard.nextLine());
-			break;
-		case 2:
-			System.out.println("Enter new description: ");
-			equipment.setDesc(keyboard.nextLine());
-		case 3:
-			System.out.println("Enter new daily rental cost:");
-			equipment.setDailyRentalCost(Integer.parseInt(keyboard.nextLine()));
-		case 4:
-			System.out.println("Enter new category: ");
-			equipment.setCategory(keyboard.nextLine());
-		}
+    private HashMap<String, String>      categories;
+    private HashMap<Equipment, Integer>  equipments;
 
-	}
-	
-	public boolean isValidEquipment(String name) {
-		for (Equipment equipment : equipments) {
-			if (equipment.getName().equals(name)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public void addStock(String id, int amount) {
-		Equipment equipment = getEquipment(id);
-		int current_stock = inventory.get(equipment);
-		int new_stock = current_stock + amount;
-		inventory.put(equipment, new_stock);
-	}
-	
-	public void removeStock(String id, int amount) {
-		Equipment equipment = getEquipment(id);
-		int current_stock = inventory.get(equipment);
-		int new_stock = current_stock - amount;
-		inventory.put(equipment, new_stock);
-	}
-	
-	public int getStock(String id) {
-		Equipment equipment = getEquipment(id);
-		return inventory.get(equipment);
-	}
-	
-	// returns true if stock is over 0, false if null or 0
-	public boolean isValidStock(String name) {
-		Equipment equipment;
-		int stock;
-		// find equipment by name first
-		for (int i = 0; i < equipments.size(); i++) {
-			if (equipments.get(i).getName().equals(name)) {
-				//get stock and determine if it is valid
-				equipment = equipments.get(i);
-				stock = inventory.get(equipment);
-				if (stock > 0) {
-					return true;
-				}
-				else {
-					return false;
-				}
-			}
-		}
-		return false;
-	}
-	
+    private final CategoryDAO  categoryDAO  = new CategoryDAO();
+    private final EquipmentDAO equipmentDAO = new EquipmentDAO();
 
+    public InventoryManager() {
+        this.equipments = new HashMap<>();
+        this.categories = new HashMap<>();
+        load();
+    }
+
+    private void load() {
+        equipments = equipmentDAO.loadAll();
+        categories = categoryDAO.loadAll();
+    }
+
+    // --- Getters ---
+
+    public ArrayList<Equipment> getAllEquipment()  {
+    	ArrayList<Equipment> equipmentList = new ArrayList<>();
+    	for (Equipment equipment : equipments.keySet()) {
+    		equipmentList.add(equipment);
+    	}; 
+    	if (equipmentList.isEmpty() == false) {
+    		return equipmentList;
+    	};
+    	return null;
+    }
+    
+    public HashMap<Equipment, Integer> getInventory() {
+    	if (equipments.isEmpty() == false) {
+    		return equipments;
+    	}
+    	else {
+    		return null;
+    	}
+    }
+    
+    public ArrayList<Category> getAllCategories() {
+    	ArrayList<Category> categoryList = new ArrayList<>();
+    	for (String category_id : categories.keySet()) {
+    		categoryList.add(new Category(category_id, categories.get(category_id)));
+    	}
+    	if (categoryList.isEmpty() == false) {
+    		return categoryList;
+    	}
+    	return null; 
+    }
+
+    public Equipment getEquipmentById(String id) {
+        for (Equipment equipment : equipments.keySet()) {
+            if (equipment.getId().equals(id)) return equipment;
+        }
+        return null;
+    }
+
+    public Category getCategoryById(String id) {
+    	for (String category : categories.keySet()) {
+            if (category.equals(id)) return new Category(category, categories.get(category));
+        }
+        return null;
+    }
+
+    public Integer getStockById(String id) {
+        for (Equipment equipment : equipments.keySet()) {
+            if (equipment.getId().equals(id)) return equipments.get(equipment);
+        }
+        return null;
+    }
+
+    // --- Equipment ---
+
+    public void addEquipment(String id, String name, String desc,
+                             double dailyRentalCost, String categoryId) throws SQLException {
+        Equipment equipment = new Equipment(
+            id, name, desc, dailyRentalCost, categoryId
+        );
+        equipmentDAO.add(equipment);
+        load();
+    }
+
+    public void removeEquipment(String id) throws SQLException {
+        equipmentDAO.remove(id);
+        load();
+    }
+
+    public void updateEquipment(Equipment equipment) throws SQLException {
+        equipmentDAO.update(equipment);
+        load();
+    }
+
+    // --- Stock ---
+
+    public void addStock(String id, int amount) throws SQLException {
+        equipmentDAO.addStock(id, amount);
+        load();
+    }
+
+    public void removeStock(String id, int amount) throws SQLException {
+        equipmentDAO.removeStock(id, amount);
+        load();
+    }
+
+    // --- Categories ---
+
+    public void addCategory(String id, String name) throws SQLException {
+        categoryDAO.add(id, name);
+        load();
+    }
+
+    public void removeCategory(String id) throws SQLException {
+        categoryDAO.remove(id);
+        load();
+    }
+
+    public void updateCategory(String id, String name) throws SQLException {
+        categoryDAO.update(id, name);
+        load();
+    }
 }

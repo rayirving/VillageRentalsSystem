@@ -1,2 +1,5 @@
 /controllers/
+/persistence/
+/application/
 /domain/
+/presentation/
